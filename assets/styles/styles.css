@@ -1,0 +1,112 @@
+* {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
+}
+
+/* "Coding Quiz Challenge" title */
+h1 {
+    font-size: 220%;
+}
+
+/* Questions and "All Done" */
+h2 {
+    font-size: 180%;
+}
+
+/* Header with link and timer */
+header{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+header p {
+    font-size: 130%;
+}
+
+#high-scores-link {
+    color: blue;
+}
+
+/* Launch Page */
+#launch-page {
+    margin: auto;
+    width: 50%;
+    text-align: center;
+}
+
+#launch-page p{
+    font-size: 130%;
+}
+
+#launch-page button{
+    font-size: 130%;
+    padding: 10px 30px;
+    background-color: darkblue;
+    color: white;
+    border-radius: 10px;
+}
+
+/* Display of questions, initially they are hidden */
+
+.question {
+    display: none;
+    padding-left: 25%;
+}
+
+/*
+ * Using the CSS counter function to number buttons.
+ * https://stackoverflow.com/questions/62792415/buttons-numbered-as-li-in-ol
+*/
+
+.question ol {
+    list-style: none;
+    counter-reset: olCounter;
+}
+
+.question li {
+    counter-increment: olCounter;
+}
+
+/* I don't like hard-coding the width like this, need something more flexible */
+.question li button {
+    font-size: 130%;
+    background-color: darkblue;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 15px;
+    width: 30%;
+    text-align: left;
+}
+
+.question li button::before {
+    content: counter(olCounter) ". ";
+}
+
+/* Finishing Display: initially hidden */
+#finished {
+    display: none;
+    margin: auto;
+    width: 50%;
+    text-align: left;
+}
+
+#finished input, label {
+    font-size: 130%
+}
+
+/* High scores: initially hidden */
+#high-scores {
+    display: none;
+    margin: auto;
+    width: 50%;
+    text-align: left;
+}
+
+#high-scores button {
+    font-size: 130%;
+    background-color: darkblue;
+    color: white;
+    padding: 10px 30px;
+    border-radius: 15px;
+}
