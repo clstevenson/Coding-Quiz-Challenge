@@ -1,0 +1,154 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Cooding Quiz Challenge</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    </head>
+    <body>
+        <!--
+             TODO: style the header
+             TODO: add countdown timer to header
+        -->
+        <header>
+            <!--
+                 TODO: make high-score paragraph clickable
+                 When user clicks on the high score, the header disappears and a list of scores appears.
+            -->
+            <p id="high-scores">View high scores</p>
+
+            <!--
+                 Time starts at 75s and counts down the seconds.
+                 Time at the end of the quiz is the user's score on the quiz.
+                 If time runs out the quiz is over nand the score is zero.
+                 Start with a placeholder, but JS will modify.
+            -->
+            <p id="timer">Time: 0</p>
+        </header>
+
+        <section id="launch-page">
+            <h1>Coding Quiz Challenge</h1>
+            <p>
+                Try to answer the following code-related questions within the time limit.
+            </p>
+            <p>
+                Keep in mind that incorrect answers will penalize your score/time by ten seconds!
+            </p>
+
+            <!-- When the button is pressed, the quiz starts -->
+            <!-- The launch page disappears and the first question appears -->
+            <button id="btn-start">
+                Start Quiz
+            </button>
+        </section>
+
+        <!--
+             For each of the "question" sections, the link items are clickable
+             When an item is correct, check if the li has class "correct"
+             If it does, then display the "Correct" message and move to the next question.
+             Otherwise remove 10 sec from the clock.
+             <!--  --> -->
+        <section id="question-1">
+            <h2>
+                Commonly used data types do NOT include:
+            </h2>
+            <ol>
+                <li>strings</li>
+                <li>booleans</li>
+                <li class="correct">alerts</li>
+                <li>numbers</li>
+            </ol>
+        </section>
+
+        <section id="question-2">
+            <h2>
+                The condition in an if/else statement is enclosed with ______________.
+            </h2>
+            <ol>
+                <li>quotes</li>
+                <li>curly brackets</li>
+                <li class="correct">parenthesis</li>
+                <li>square brackets</li>
+            </ol>
+        </section>
+
+        <section id="question-3">
+            <h2>
+                Arrays in JavaScript can be used to store _____________.
+            </h2>
+            <ol>
+                <li>numbers and strings</li>
+                <li>other arrays</li>
+                <li>booleans</li>
+                <li class="correct">all of the above</li>
+            </ol>
+        </section>
+
+        <section id="question-4">
+            <h2>
+                String values must be enclosed within ____________ when being assigned to variables.
+            </h2>
+            <ol>
+                <li>commas</li>
+                <li>curly brackets</li>
+                <li class="correct">quotes</li>
+                <li>parenthesis</li>
+            </ol>
+        </section>
+
+        <section id="question-5">
+            <h2>
+                A very useful tool used during development and debugging for printing content to the debugger is:
+            </h2>
+            <ol>
+                <li>JavaScript</li>
+                <li>terminal/bash</li>
+                <li>for loops</li>
+                <li class="correct">console.log</li>
+            </ol>
+        </section>
+
+        <!-- The section below is displayed when the quiz is finished (or the time runs out) -->
+        <section id="finished">
+            <!-- Header below will be different if time ran out -->
+            <h2>All done!</h2>
+
+            <!-- Content in p is set by JS: "Your final score is " + score + "." -->
+            <p id="final-score"></p>
+
+            <!-- Prompt user to enter their initials, store the response along with the score -->
+            <label for="initials">Enter initials:</label>
+            <input type="text" name="initials" value=""  id="initials"/>
+            <input type="submit" name="submit" value="Submit" />
+        </section>
+
+        <!--
+             High Scores page
+             Display a list of high scores. This is displayed:
+             (a) when a user enters their initials, or
+             (b) when a user clicks the "high scores" text in the header
+
+             The main header is NOT displayed on this page.
+
+             The list of high scores is obtained from local storage, sorted, and added programmatically.
+        -->
+        <section id="high-scores">
+            <h2>High scores</h2>
+
+            <!-- list is generated by JS -->
+            <ol></ol>
+
+            <!--
+                 Two possible actions:
+                 - Go back: returns to the landing page
+                 - Clear high scores: clears the scores, displays an alert, then goes to the landing page
+            -->
+            <button id="go-back">Go back</button>
+            <button id="clear-scores">Clear high scores</button>
+        </section>
+
+    </body>
+</html>
