@@ -1,3 +1,7 @@
+/*****************************************************************************/
+/*                              General Styling                              */
+/*****************************************************************************/
+
 * {
     font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif;
 }
@@ -11,6 +15,10 @@ h1 {
 h2 {
     font-size: 180%;
 }
+
+/*****************************************************************************/
+/*                                Header block                               */
+/*****************************************************************************/
 
 /* Header with link and timer */
 header{
@@ -26,6 +34,12 @@ header p {
 
 #high-scores-link {
     color: blue;
+}
+
+#high-scores-link:hover {
+    color: black;
+    border-bottom: solid 1px black;
+    cursor: pointer;
 }
 
 /* Launch Page */
@@ -46,6 +60,10 @@ header p {
     color: white;
     border-radius: 10px;
 }
+
+/*****************************************************************************/
+/*                                 Questions                                 */
+/*****************************************************************************/
 
 /* Display of questions, initially they are hidden */
 
@@ -83,6 +101,23 @@ header p {
     content: counter(olCounter) ". ";
 }
 
+/* #Q2 { */
+/*     display: block; */
+/* } */
+
+.question p.response {
+    color: gray;
+    font-size: 180%;
+    font-style: italic;
+    border-top: solid 2px gray;
+    margin-top: 30px;
+    width: 80%;
+}
+
+/*****************************************************************************/
+/*                                End of Quiz                                */
+/*****************************************************************************/
+
 /* Finishing Display: initially hidden */
 #finished {
     display: none;
@@ -94,6 +129,10 @@ header p {
 #finished input, label {
     font-size: 130%
 }
+
+/*****************************************************************************/
+/*                                High Scores                                */
+/*****************************************************************************/
 
 /* High scores: initially hidden */
 #high-scores {
