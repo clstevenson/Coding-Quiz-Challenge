@@ -39,10 +39,21 @@ btnStartQuizEl.addEventListener("click", function() {
   firstQuestionEl.style.display = "block";
 });
 
-// TODO For each question, respond to user selection
 
 /*
  * TODO For each question, respond to user selection
  * If the user selects the correct answer, move to next window and append "Correct!"
  * If the user selects the wrong answer, subtract 10 sec frmo the timer, move to the next window and append "Wrong!"
  */
+
+// return list of possible answers (which are child elements of the ol)
+var answerList = document.querySelector(".question ol");
+
+answerList.addEventListener("click", function(evt) {
+  var chosenAnswerEl = evt.target;
+  if (chosenAnswerEl.className == 'correct') {
+    console.log("The choice was correct");
+  } else {
+    console.log("That was not correct");
+  }
+});
