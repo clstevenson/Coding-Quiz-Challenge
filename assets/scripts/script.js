@@ -1,6 +1,4 @@
-// Clicking the "View High Scores" element will go to the page
-
-// select by ID
+// elements selected by ID
 var launchPageEl = document.getElementById("launch-page");
 var highScoresPageEl = document.getElementById("high-scores");
 var finishedPageEl = document.getElementById("finished");
@@ -9,8 +7,9 @@ var questionsContainerEl = document.getElementById("all-questions");
 // First retrieve an array of all sections containing questions
 var sectionQuestionEl = document.querySelectorAll(".question");
 
-// If I add a routine to scramble the questions, insert it here
-
+///////////////////////////////////////////////////////////////////////////////
+//      If I add a routine to scramble the questions, insert it here         //
+///////////////////////////////////////////////////////////////////////////////
 
 // Identify the first question since it is special
 var firstQuestionEl = sectionQuestionEl[0];
@@ -37,8 +36,16 @@ for (var qnum = 0; qnum < sectionQuestionEl.length; qnum++) {
 };
 
 
-// TODO add countdown timer
-
+// Add countdown timer
+// set up variables/function for timer
+var timeLeft = 75;
+var timerEl = document.getElementById("timer");
+function displayTimeLeft() {
+  timeLeft--;
+  timerEl.textContent = timeLeft;
+};
+// display 75 sec initially (in landing page) before timer starts
+timerEl.textContent = timeLeft;
 
 
 // TODO store and clear high scores (local storage I assume)
@@ -72,6 +79,9 @@ btnStartQuizEl.addEventListener("click", function() {
   launchPageEl.style.display = "none";
   // turn on the section with the first question
   firstQuestionEl.style.display = "block";
+  // start the timer
+  timeLeft = 75;   // initialize
+  setInterval(displayTimeLeft, 1000);
 });
 
 // set event listener for the div containing all the questions
