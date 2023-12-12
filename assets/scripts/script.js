@@ -6,13 +6,6 @@ var highScoresPageEl = document.getElementById("high-scores");
 var questionsContainerEl = document.getElementById("all-questions");
 
 
-// TODO add countdown timer
-
-
-
-// Add data attribute giving the question number
-
-
 // First retrieve an array of all sections containing questions
 sectionQuestionEl = document.querySelectorAll(".question");
 
@@ -22,9 +15,34 @@ sectionQuestionEl = document.querySelectorAll(".question");
 // Identify the first question since it is special
 var firstQuestionEl = sectionQuestionEl[0];
 
+// For each question section, find all the buttons and give them a data-attribute
+// that identifies them as belonging to the same question
+// Let's use zero-based indexing for the question numbers, seems simpler and safer
 
-// Then label all the buttons within the same section with the same data-attribute
-// The data-attribute will give the question number
+// For loops to label each button with its question number
+// Maybe there is a better/easier way?
+for (var qnum = 0; qnum < sectionQuestionEl.length; qnum++) {
+  // loop thru children elements of current question
+  for (var i = 0; i < sectionQuestionEl[qnum].children.length; i++) {
+    var questionEl = sectionQuestionEl[qnum].children[i];
+    // if element is OL, then set the data attribute qnum
+    if (questionEl.tagName === "OL") {
+      for (var j = 0; j < questionEl.children.length; j++) {
+        // each li should be the only children of the ol
+        // And each li should only have one child, a button
+        questionEl.children[j].firstChild.dataset.qnum = qnum;
+      };
+    };
+  };
+};
+
+
+// TODO add countdown timer
+
+
+
+// TODO store and clear high scores (local storage I assume)
+
 
 
 ///////////////////////////////////////////////////////////////////////////////
