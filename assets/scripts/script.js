@@ -29,31 +29,43 @@ btnGoBackEl.addEventListener("click", function() {
 // Make "Start Quiz" button clickable to go to Q1
 var btnStartQuizEl = document.getElementById("btn-start");
 
-// retrieve an array of question lists
-// then loop thru each question and get the responses
-var firstQuestionEl = document.getElementById("Q1");
+// retrieve an array of question lists and quiz responses
+var questionsEl = document.querySelectorAll(".question");
+
+// loop thru each question and get the responses
+var answerList;
 
 btnStartQuizEl.addEventListener("click", function() {
   // turn off the launch page and turn on the Q1 page
   launchPageEl.style.display = "none";
-  firstQuestionEl.style.display = "block";
+  questionsEl[questionNumber].style.display = "block";
 });
 
+var questionNumber = 0;
 
 /*
  * TODO For each question, respond to user selection
  * If the user selects the correct answer, move to next window and append "Correct!"
- * If the user selects the wrong answer, subtract 10 sec frmo the timer, move to the next window and append "Wrong!"
+ * If the user selects the wrong answer, subtract 10 sec from the timer, move to the next window and append "Wrong!"
  */
 
 // return list of possible answers (which are child elements of the ol)
-var answerList = document.querySelector(".question ol");
+answerList = questionsEl[questionNumber].children[1];
 
 answerList.addEventListener("click", function(evt) {
+  // retrieve the button that was selected
   var chosenAnswerEl = evt.target;
+  // hide the current question
+  questionsEl[questionNumber].style.display = "none";
+  // increment the question
+  questionNumber++;
   if (chosenAnswerEl.className == 'correct') {
     console.log("The choice was correct");
+    questionsEl[questionNumber].children[2].textContent = "Correct!"
+    questionsEl[questionNumber].style.display = "block";
   } else {
     console.log("That was not correct");
+    questionsEl[questionNumber].children[2].textContent = "Wrong!"
+    questionsEl[questionNumber].style.display = "block";
   }
 });
