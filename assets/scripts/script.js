@@ -26,8 +26,18 @@ btnGoBackEl.addEventListener("click", function() {
 // TODO add countdown timer
 
 
-// TODO Make "Start Quiz" button clickable to go to Q1
+// Make "Start Quiz" button clickable to go to Q1
+var btnStartQuizEl = document.getElementById("btn-start");
 
+// retrieve an array of question lists
+// then loop thru each question and get the responses
+var firstQuestionEl = document.getElementById("Q1");
+
+btnStartQuizEl.addEventListener("click", function() {
+  // turn off the launch page and turn on the Q1 page
+  launchPageEl.style.display = "none";
+  firstQuestionEl.style.display = "block";
+});
 
 // TODO For each question, respond to user selection
 
