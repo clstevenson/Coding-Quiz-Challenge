@@ -9,6 +9,24 @@ var questionsContainerEl = document.getElementById("all-questions");
 // TODO add countdown timer
 
 
+
+// Add data attribute giving the question number
+
+
+// First retrieve an array of all sections containing questions
+sectionQuestionEl = document.querySelectorAll(".question");
+
+// If I add a routine to scramble the questions, insert it here
+
+
+// Identify the first question since it is special
+var firstQuestionEl = sectionQuestionEl[0];
+
+
+// Then label all the buttons within the same section with the same data-attribute
+// The data-attribute will give the question number
+
+
 ///////////////////////////////////////////////////////////////////////////////
 //                              Event Listeners                              //
 ///////////////////////////////////////////////////////////////////////////////
@@ -34,17 +52,14 @@ var btnStartQuizEl = document.getElementById("btn-start");
 btnStartQuizEl.addEventListener("click", function() {
   // turn off the launch page
   launchPageEl.style.display = "none";
-
   // turn on the section with the first question
-  // for now this is a place-holder, eventually it will be chosen programmatically
-  firstQuestionEl = document.getElementById("Q1")
   firstQuestionEl.style.display = "block";
 });
 
 // set event listener for the div containing all the questions
 // when the user clicks on their choice of answer,
 // get the target by event delegation and proceed accordingly
-answerList.addEventListener("click", function(evt) {
+questionsContainerEl.addEventListener("click", function(evt) {
   // retrieve the button that was selected
   var chosenAnswerEl = evt.target;
 
