@@ -3,11 +3,11 @@
 // select by ID
 var launchPageEl = document.getElementById("launch-page");
 var highScoresPageEl = document.getElementById("high-scores");
+var finishedPageEl = document.getElementById("finished");
 var questionsContainerEl = document.getElementById("all-questions");
 
-
 // First retrieve an array of all sections containing questions
-sectionQuestionEl = document.querySelectorAll(".question");
+var sectionQuestionEl = document.querySelectorAll(".question");
 
 // If I add a routine to scramble the questions, insert it here
 
@@ -81,6 +81,13 @@ questionsContainerEl.addEventListener("click", function(evt) {
   // retrieve the button that was selected
   var chosenAnswerEl = evt.target;
 
+  // create variables from data stored with clicked item
+  var qnum = +chosenAnswerEl.dataset.qnum;
+  var isCorrect = (chosenAnswerEl.dataset.correct === "true");
+
+  // after the last question we need to do something different
+  var lastQ = sectionQuestionEl.length - 1;
+
   /*
    * Take action:
    * - hide the current question
@@ -89,15 +96,22 @@ questionsContainerEl.addEventListener("click", function(evt) {
    * - if the next question doesn't exist, display the "finished" section
    */
 
-  /*
-  if (chosenAnswerEl.className == 'correct') {
-    console.log("The choice was correct");
-    questionsEl[questionNumber].children[2].textContent = "Correct!"
-    questionsEl[questionNumber].style.display = "block";
+  if (isCorrect && qnum < lastQ) {
+    // feedback to user
+    sectionQuestionEl[qnum+1].children[2].textContent = "Correct!"
+    // turn off current question, move to next question
+    sectionQuestionEl[qnum].style.display = "none";
+    sectionQuestionEl[qnum+1].style.display = "block";
+  } else if (qnum < lastQ) {
+    // feedback to user
+    sectionQuestionEl[qnum+1].children[2].textContent = "Wrong!"
+    // turn off current question, move to next question
+    sectionQuestionEl[qnum].style.display = "none";
+    sectionQuestionEl[qnum+1].style.display = "block";
   } else {
-    console.log("That was not correct");
-    questionsEl[questionNumber].children[2].textContent = "Wrong!"
-    questionsEl[questionNumber].style.display = "block";
+    // we are at the last question, need to display score and get initials
+    sectionQuestionEl[qnum].style.display = "none";
+    finishedPageEl.style.display = "block";
+    console.log("Correct answer on last Q? " + isCorrect);
   }
-   */
 });
