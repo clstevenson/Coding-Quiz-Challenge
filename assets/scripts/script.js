@@ -5,14 +5,14 @@ var finishedPageEl = document.getElementById("finished");
 var questionsContainerEl = document.getElementById("all-questions");
 
 // First retrieve an array of all sections containing questions
-var sectionQuestionEl = document.querySelectorAll(".question");
+var questionsPage = document.querySelectorAll(".question");
 
 ///////////////////////////////////////////////////////////////////////////////
 //      If I add a routine to scramble the questions, insert it here         //
 ///////////////////////////////////////////////////////////////////////////////
 
 // Identify the first question since it is special
-var firstQuestionEl = sectionQuestionEl[0];
+var firstQuestionEl = questionsPage[0];
 
 // For each question section, find all the buttons and give them a data-attribute
 // that identifies them as belonging to the same question
@@ -20,10 +20,10 @@ var firstQuestionEl = sectionQuestionEl[0];
 
 // For loops to label each button with its question number
 // Maybe there is a better/easier way?
-for (var qnum = 0; qnum < sectionQuestionEl.length; qnum++) {
+for (var qnum = 0; qnum < questionsPage.length; qnum++) {
   // loop thru children elements of current question
-  for (var i = 0; i < sectionQuestionEl[qnum].children.length; i++) {
-    var questionEl = sectionQuestionEl[qnum].children[i];
+  for (var i = 0; i < questionsPage[qnum].children.length; i++) {
+    var questionEl = questionsPage[qnum].children[i];
     // if element is OL, then set the data attribute qnum
     if (questionEl.tagName === "OL") {
       for (var j = 0; j < questionEl.children.length; j++) {
@@ -40,13 +40,44 @@ for (var qnum = 0; qnum < sectionQuestionEl.length; qnum++) {
 // set up variables/function for timer
 var timeLeft = 75;
 var timerEl = document.getElementById("timer");
+var timeInterval;    // interval ID; needs to be global in scope
+
 function displayTimeLeft() {
   timeLeft--;
+  if (timeLeft <= 0) {
+    timeLeft = 0;
+    timerEl.textContent = timeLeft;
+    clearInterval(timeInterval);
+    displayFinal();
+  }
   timerEl.textContent = timeLeft;
-};
+}
 // display 75 sec initially (in landing page) before timer starts
 timerEl.textContent = timeLeft;
 
+
+// Function to display the final page along with the score
+// it is assumed the timer interval would be cleared before calling the function
+function displayFinal() {
+  // if the timer is below zero, set to zero
+  if (timeLeft < 0) {timeLeft = 0;}
+
+  // set the final score to display
+  var scoreEl = document.getElementById("final-score");
+  scoreEl.textContent = "Final score: " + timeLeft;
+
+  // makd sure all questions pages are hidden
+  hideQuestions();
+
+  // show the page
+  finishedPageEl.style.display = "block";
+}
+
+function hideQuestions () {
+  for (var i=0; i < questionsPage.length; i++) {
+    questionsPage[i].style.display = "none";
+  }
+}
 
 // TODO store and clear high scores (local storage I assume)
 
@@ -62,6 +93,10 @@ viewHighScoresEl.addEventListener("click", function() {
   // turn off the launch page display, turn on the high scores page
   launchPageEl.style.display = "none";
   highScoresPageEl.style.display = "block";
+  // just in case, turn off all questions pages too
+  hideQuestions();
+  // and the finishing page too, in case it is showing
+  finishedPageEl.style.display = "none";
 });
 
 // return to the launch page from the high scores page
@@ -70,6 +105,8 @@ btnGoBackEl.addEventListener("click", function() {
   // turn off the high scores page and turn on the launch page
   launchPageEl.style.display = "block";
   highScoresPageEl.style.display = "none";
+  // just in case, turn off the questions pages
+  hideQuestions();
 });
 
 // button to start the quiz
@@ -81,7 +118,7 @@ btnStartQuizEl.addEventListener("click", function() {
   firstQuestionEl.style.display = "block";
   // start the timer
   timeLeft = 75;   // initialize
-  setInterval(displayTimeLeft, 1000);
+  timeInterval = setInterval(displayTimeLeft, 1000);
 });
 
 // set event listener for the div containing all the questions
@@ -96,32 +133,37 @@ questionsContainerEl.addEventListener("click", function(evt) {
   var isCorrect = (chosenAnswerEl.dataset.correct === "true");
 
   // after the last question we need to do something different
-  var lastQ = sectionQuestionEl.length - 1;
+  var lastQ = questionsPage.length - 1;
 
-  /*
-   * Take action:
-   * - hide the current question
-   * - if the next question exists, display it
-   * - give feedback to the user on whether they got the previous Q wrong
-   * - if the next question doesn't exist, display the "finished" section
-   */
-
-  if (isCorrect && qnum < lastQ) {
-    // feedback to user
-    sectionQuestionEl[qnum+1].children[2].textContent = "Correct!"
+  // first check if on the last page
+  if (qnum == lastQ) {
+    console.log("I am here: last question! And it was " + isCorrect);
+    // turn off the timer
+    clearInterval(timeInterval);
+    // assess penalty if last question incorrect
+    if (!isCorrect) {timeLeft-=10;}
+    // show final page
+    displayFinal();
+  } else if (isCorrect) {
+    // not on the last page and the answer is correct
+    questionsPage[qnum+1].children[2].textContent = "Correct!"
     // turn off current question, move to next question
-    sectionQuestionEl[qnum].style.display = "none";
-    sectionQuestionEl[qnum+1].style.display = "block";
-  } else if (qnum < lastQ) {
-    // feedback to user
-    sectionQuestionEl[qnum+1].children[2].textContent = "Wrong!"
-    // turn off current question, move to next question
-    sectionQuestionEl[qnum].style.display = "none";
-    sectionQuestionEl[qnum+1].style.display = "block";
+    questionsPage[qnum].style.display = "none";
+    questionsPage[qnum+1].style.display = "block";
   } else {
-    // we are at the last question, need to display score and get initials
-    sectionQuestionEl[qnum].style.display = "none";
-    finishedPageEl.style.display = "block";
-    console.log("Correct answer on last Q? " + isCorrect);
+    // not on the last page and the answer was incorrect
+    questionsPage[qnum+1].children[2].textContent = "Wrong!"
+    // turn off current question, move to next question
+    questionsPage[qnum].style.display = "none";
+    questionsPage[qnum+1].style.display = "block";
+    // assess penalty
+    timeLeft-=10;
+    if (timeLeft < 0) {
+      // don't allow negative scores
+      timeLeft = 0;
+      // stop timer and display "finished" page
+      clearInterval(timeInterval);
+      displayFinal();
+    }
   }
 });
