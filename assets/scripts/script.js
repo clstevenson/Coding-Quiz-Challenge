@@ -15,38 +15,42 @@ var questionsContainerEl = document.getElementById("all-questions");
  **********************/
 
 // define variables we will need
-var scores = [];
 var scoreListEl = document.querySelectorAll("#score-list li");
 var initialsEl = document.getElementById("initials");
-
-// code below is placeholder; eventually it will be replaced by initializing with blank array
-// define a function to retrieve the object array
-// get the values then store in the scores array
+var scores = [];
 
 function loadScores() {
   // load the scores from local storage into memory
-  // (use values below to mimic this process)
-  scores = [
-    {
-      initials: "IMS",
-      score: 9
-    },
-    {
-      initials: "HNS",
-      score: 64
-    },
-    {
-      initials: "CLS",
-      score: 59
-    },
-  ];
+  storedScores = JSON.parse(localStorage.getItem("scores"));
+  if (storedScores != null) {
+    scores = storedScores;
+  }
+
+  // use values below for testing, if needed
+  // scores = [
+  //   {
+  //     initials: "IMS",
+  //     score: 9
+  //   },
+  //   {
+  //     initials: "HNS",
+  //     score: 64
+  //   },
+  //   {
+  //     initials: "CLS",
+  //     score: 59
+  //   },
+  // ];
+
+  sortScores();
 }
 
+// Load scores from memory
 loadScores();
 
 function saveScores() {
   // save scores from memory to local storage
-
+  localStorage.setItem("scores", JSON.stringify(scores));
 }
 
 // updates high scores array, storage, and page (which may be hidden)
@@ -54,8 +58,15 @@ function saveScores() {
 function updateScores(initials, score) {
   // sort scores first, just in case
   sortScores();
-  // If a high score, store in initials/score as an object in the scores array
-  if (score > scores[2].score) {    // in the top three?
+
+  // not sure how many scores we have
+  var n = scores.length;
+
+  // if we don't have 3 scores, add to the list
+  if (n < 3) {
+    scores.push({initials: initials, score: score});
+  } else if (score > scores[2].score) {
+    // displaces an existing score
     scores[2].initials = initials;
     scores[2].score = score;
     sortScores();
@@ -67,13 +78,15 @@ function updateScores(initials, score) {
 
 // sorts score objects from highest to lowest (on the score value)
 function sortScores(){
-  scores.sort(function(a,b) {return b.score - a.score;});
+   if (scores.length > 1) {
+    scores.sort(function(a,b) {return b.score - a.score;});
+  }
 }
 
 // update the high score page with the scores array values
 function writeScoresPage() {
   // sort the scores before displaying
-  scores.sort(function(a,b) {return b.score - a.score;});
+  sortScores();
 
   // write to the scores page
   for (var i=0; i < scores.length; i++) {
@@ -85,7 +98,9 @@ function writeScoresPage() {
 function clearScores() {
   // clear scores from memory
   scores = [];
+
   // clear scores from local storage
+  localStorage.removeItem("scores");
 
   // clear high scores page (which might not be displayed)
   for (var i=0; i < scoreListEl.length; i++) {
