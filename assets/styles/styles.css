@@ -149,3 +149,11 @@ header p {
     padding: 10px 30px;
     border-radius: 15px;
 }
+
+#high-scores div {
+    margin: 50px 0px;
+}
+
+#high-scores li {
+    font-size: 130%;
+}

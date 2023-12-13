@@ -4,12 +4,125 @@ var highScoresPageEl = document.getElementById("high-scores");
 var finishedPageEl = document.getElementById("finished");
 var questionsContainerEl = document.getElementById("all-questions");
 
+///////////////////////////////////////////////////////////////////////////////
+//                                High Scores                                 //
+///////////////////////////////////////////////////////////////////////////////
+
+/**********************
+ * Array and local storage for the three objects (initials and score) that
+ * have the highest score. Also need associated functions to update, save,
+ * and order the scores.
+ **********************/
+
+// define variables we will need
+var scores = [];
+var scoreListEl = document.querySelectorAll("#score-list li");
+var initialsEl = document.getElementById("initials");
+
+// code below is placeholder; eventually it will be replaced by initializing with blank array
+// define a function to retrieve the object array
+// get the values then store in the scores array
+
+function loadScores() {
+  // load the scores from local storage into memory
+  // (use values below to mimic this process)
+  scores = [
+    {
+      initials: "IMS",
+      score: 9
+    },
+    {
+      initials: "HNS",
+      score: 64
+    },
+    {
+      initials: "CLS",
+      score: 59
+    },
+  ];
+}
+
+loadScores();
+
+function saveScores() {
+  // save scores from memory to local storage
+
+}
+
+// updates high scores array, storage, and page (which may be hidden)
+// Function called after quiz is completed
+function updateScores(initials, score) {
+  // sort scores first, just in case
+  sortScores();
+  // If a high score, store in initials/score as an object in the scores array
+  if (score > scores[2].score) {    // in the top three?
+    scores[2].initials = initials;
+    scores[2].score = score;
+    sortScores();
+  }
+
+  // Update local storage values
+  saveScores();
+}
+
+// sorts score objects from highest to lowest (on the score value)
+function sortScores(){
+  scores.sort(function(a,b) {return b.score - a.score;});
+}
+
+// update the high score page with the scores array values
+function writeScoresPage() {
+  // sort the scores before displaying
+  scores.sort(function(a,b) {return b.score - a.score;});
+
+  // write to the scores page
+  for (var i=0; i < scores.length; i++) {
+    scoreListEl[i].textContent = scores[i].score + " (" + scores[i].initials + ")";
+  }
+}
+
+// function below is called when the user clicks on the "Clear high scores" button
+function clearScores() {
+  // clear scores from memory
+  scores = [];
+  // clear scores from local storage
+
+  // clear high scores page (which might not be displayed)
+  for (var i=0; i < scoreListEl.length; i++) {
+    scoreListEl[i].textContent = "";
+  }
+}
 // First retrieve an array of all sections containing questions
 var questionsPage = document.querySelectorAll(".question");
 
 ///////////////////////////////////////////////////////////////////////////////
 //      If I add a routine to scramble the questions, insert it here         //
 ///////////////////////////////////////////////////////////////////////////////
+
+/*********************
+ * TODO add routine to scramble the question order
+ * TODO add routine to scamble the answers within a question
+ * TODO add more questions (20 or more) and sample five of them for the quiz
+ * TODO add more flexibility to the quiz: user can choose number of questions
+ * - start time will be det'd automatically
+ * - high scores will be based on avg time per question, or something similar
+ * - default to 5 questions (and 75 sec)
+ *********************/
+
+/*********************
+ * TODO refactor the code: number the sections instead of the buttons
+ * I think some refactoring may be in order...instead of attaching the question
+ * numbers to the button elements, attach them to their section great grandparent.
+ * (the current sequence is section -> ol -> li -> button)
+ *
+ * Write a function to obtain the question number from the event (click) target,
+ * which is the button.
+ *
+ * The advantage of this approach is that randomization and subsampling is easier:
+ * - get an array of all section elements
+ * - jumble the integers from 0 to length-1, and then assign them to the sections
+ * - use the first N questions (five? user choice? See above block)
+ *********************/
 
 // Identify the first question since it is special
 var firstQuestionEl = questionsPage[0];
@@ -35,7 +148,6 @@ for (var qnum = 0; qnum < questionsPage.length; qnum++) {
   };
 };
 
-
 // Add countdown timer
 // set up variables/function for timer
 var timeLeft = 75;
@@ -55,16 +167,17 @@ function displayTimeLeft() {
 // display 75 sec initially (in landing page) before timer starts
 timerEl.textContent = timeLeft;
 
-
 // Function to display the final page along with the score
 // it is assumed the timer interval would be cleared before calling the function
 function displayFinal() {
   // if the timer is below zero, set to zero
-  if (timeLeft < 0) {timeLeft = 0;}
+  if (timeLeft < 0) {
+    timeLeft = 0;
+  }
 
   // set the final score to display
   var scoreEl = document.getElementById("final-score");
-  scoreEl.textContent = "Final score: " + timeLeft;
+  scoreEl.textContent = "Your final score is: " + timeLeft;
 
   // makd sure all questions pages are hidden
   hideQuestions();
@@ -73,14 +186,11 @@ function displayFinal() {
   finishedPageEl.style.display = "block";
 }
 
-function hideQuestions () {
-  for (var i=0; i < questionsPage.length; i++) {
+function hideQuestions() {
+  for (var i = 0; i < questionsPage.length; i++) {
     questionsPage[i].style.display = "none";
   }
 }
-
-// TODO store and clear high scores (local storage I assume)
-
 
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -90,6 +200,8 @@ function hideQuestions () {
 // view the high scores from the launch screen
 var viewHighScoresEl = document.getElementById("high-scores-link");
 viewHighScoresEl.addEventListener("click", function() {
+  // need to update the high scores page before showing it
+  writeScoresPage();
   // turn off the launch page display, turn on the high scores page
   launchPageEl.style.display = "none";
   highScoresPageEl.style.display = "block";
@@ -137,27 +249,26 @@ questionsContainerEl.addEventListener("click", function(evt) {
 
   // first check if on the last page
   if (qnum == lastQ) {
-    console.log("I am here: last question! And it was " + isCorrect);
     // turn off the timer
     clearInterval(timeInterval);
     // assess penalty if last question incorrect
-    if (!isCorrect) {timeLeft-=10;}
+    if (!isCorrect) { timeLeft -= 10; }
     // show final page
     displayFinal();
   } else if (isCorrect) {
     // not on the last page and the answer is correct
-    questionsPage[qnum+1].children[2].textContent = "Correct!"
+    questionsPage[qnum + 1].children[2].textContent = "Correct!"
     // turn off current question, move to next question
     questionsPage[qnum].style.display = "none";
-    questionsPage[qnum+1].style.display = "block";
+    questionsPage[qnum + 1].style.display = "block";
   } else {
     // not on the last page and the answer was incorrect
-    questionsPage[qnum+1].children[2].textContent = "Wrong!"
+    questionsPage[qnum + 1].children[2].textContent = "Wrong!"
     // turn off current question, move to next question
     questionsPage[qnum].style.display = "none";
-    questionsPage[qnum+1].style.display = "block";
+    questionsPage[qnum + 1].style.display = "block";
     // assess penalty
-    timeLeft-=10;
+    timeLeft -= 10;
     if (timeLeft < 0) {
       // don't allow negative scores
       timeLeft = 0;
@@ -167,3 +278,36 @@ questionsContainerEl.addEventListener("click", function(evt) {
     }
   }
 });
+
+// TODO Add keypress (Enter/Return) listener to the initials input box too (same function)
+// When clicked or pressing Return write the initials and score to the scores array
+// Then display the top 3 scores on the board
+
+var submitEl = document.querySelector("#finished input[type=submit]");
+var clearScoresBtnEl = document.getElementById("clear-scores");
+
+// get initials from the form, update high scores (calling function), display high score page
+function getInitials() {
+  // check to see if user entered initials; if not, give an alert and return
+  if (initialsEl.value == "") {
+    alert("Please enter your initials.");
+    return;
+  }
+
+  // update scores in memory and local storage
+  updateScores(initialsEl.value, timeLeft);
+
+  // update the high scores page
+  writeScoresPage();
+
+  // clear the initials
+  initialsEl.value = "";
+
+  // turn off the "finished page" and turn on the "high scores" page
+  finishedPageEl.style.display = "none";
+  highScoresPageEl.style.display = "block";
+}
+
+submitEl.addEventListener("click", getInitials);
+
+clearScoresBtnEl.addEventListener("click", clearScores);
