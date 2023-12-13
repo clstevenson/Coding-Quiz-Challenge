@@ -19,8 +19,8 @@ var scoreListEl = document.querySelectorAll("#score-list li");
 var initialsEl = document.getElementById("initials");
 var scores = [];
 
+// load the scores from local storage into memory
 function loadScores() {
-  // load the scores from local storage into memory
   storedScores = JSON.parse(localStorage.getItem("scores"));
   if (storedScores != null) {
     scores = storedScores;
@@ -48,8 +48,8 @@ function loadScores() {
 // Load scores from memory
 loadScores();
 
+// save scores from memory to local storage
 function saveScores() {
-  // save scores from memory to local storage
   localStorage.setItem("scores", JSON.stringify(scores));
 }
 
@@ -64,7 +64,7 @@ function updateScores(initials, score) {
 
   // if we don't have 3 scores, add to the list
   if (n < 3) {
-    scores.push({initials: initials, score: score});
+    scores.push({ initials: initials, score: score });
   } else if (score > scores[2].score) {
     // displaces an existing score
     scores[2].initials = initials;
@@ -77,9 +77,9 @@ function updateScores(initials, score) {
 }
 
 // sorts score objects from highest to lowest (on the score value)
-function sortScores(){
-   if (scores.length > 1) {
-    scores.sort(function(a,b) {return b.score - a.score;});
+function sortScores() {
+  if (scores.length > 1) {
+    scores.sort(function(a, b) { return b.score - a.score; });
   }
 }
 
@@ -89,7 +89,7 @@ function writeScoresPage() {
   sortScores();
 
   // write to the scores page
-  for (var i=0; i < scores.length; i++) {
+  for (var i = 0; i < scores.length; i++) {
     scoreListEl[i].textContent = scores[i].score + " (" + scores[i].initials + ")";
   }
 }
@@ -103,16 +103,20 @@ function clearScores() {
   localStorage.removeItem("scores");
 
   // clear high scores page (which might not be displayed)
-  for (var i=0; i < scoreListEl.length; i++) {
+  for (var i = 0; i < scoreListEl.length; i++) {
     scoreListEl[i].textContent = "";
   }
 }
-// First retrieve an array of all sections containing questions
-var questionsPage = document.querySelectorAll(".question");
 
 ///////////////////////////////////////////////////////////////////////////////
-//      If I add a routine to scramble the questions, insert it here         //
+//                               Quiz Questions                              //
 ///////////////////////////////////////////////////////////////////////////////
+
+// First retrieve an array of all sections containing questions
+// Only one of these sections will have visible elements at any give time
+// As the user submits answers, we progress through the array
+
+var questionsPage = document.querySelectorAll(".question");
 
 /*********************
  * TODO add routine to scramble the question order
@@ -122,9 +126,7 @@ var questionsPage = document.querySelectorAll(".question");
  * - start time will be det'd automatically
  * - high scores will be based on avg time per question, or something similar
  * - default to 5 questions (and 75 sec)
- *********************/
-
-/*********************
+ *
  * TODO refactor the code: number the sections instead of the buttons
  * I think some refactoring may be in order...instead of attaching the question
  * numbers to the button elements, attach them to their section great grandparent.
@@ -163,12 +165,16 @@ for (var qnum = 0; qnum < questionsPage.length; qnum++) {
   };
 };
 
-// Add countdown timer
+///////////////////////////////////////////////////////////////////////////////
+//                              Countdown Timer                              //
+///////////////////////////////////////////////////////////////////////////////
+
 // set up variables/function for timer
 var timeLeft = 75;
 var timerEl = document.getElementById("timer");
 var timeInterval;    // interval ID; needs to be global in scope
 
+// function for the timer
 function displayTimeLeft() {
   timeLeft--;
   if (timeLeft <= 0) {
@@ -207,7 +213,6 @@ function hideQuestions() {
   }
 }
 
-
 ///////////////////////////////////////////////////////////////////////////////
 //                              Event Listeners                              //
 ///////////////////////////////////////////////////////////////////////////////
@@ -237,6 +242,7 @@ btnGoBackEl.addEventListener("click", function() {
 });
 
 // button to start the quiz
+// contains timer functions
 var btnStartQuizEl = document.getElementById("btn-start");
 btnStartQuizEl.addEventListener("click", function() {
   // turn off the launch page
@@ -294,10 +300,7 @@ questionsContainerEl.addEventListener("click", function(evt) {
   }
 });
 
-// TODO Add keypress (Enter/Return) listener to the initials input box too (same function)
-// When clicked or pressing Return write the initials and score to the scores array
-// Then display the top 3 scores on the board
-
+// events/functions below are for after the quiz is complete
 var submitEl = document.querySelector("#finished input[type=submit]");
 var clearScoresBtnEl = document.getElementById("clear-scores");
 

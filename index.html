@@ -31,14 +31,7 @@
             </button>
         </section>
 
-        <!--
-             For each of the "question" sections, the link items are clickable
-             When an item is correct, check if the li has class "correct"
-             If it does, then display the "Correct" message and move to the next question.
-             Otherwise remove 10 sec from the clock.
-        -->
-
-
+        <!-- div contains all questions and we set the event listener on it -->
         <div id="all-questions">
             <section class="question">
                 <h2>
@@ -66,7 +59,6 @@
                     Correct!
                 </p>
             </section>
-
             <section class="question">
                 <h2>
                     Arrays in JavaScript can be used to store _____________.
@@ -82,7 +74,6 @@
                     Correct!
                 </p>
             </section>
-
             <section class="question">
                 <h2>
                     String values must be enclosed within ____________ when being assigned to variables.
@@ -98,7 +89,6 @@
                     Correct!
                 </p>
             </section>
-
             <section class="question">
                 <h2>
                     A very useful tool used during development and debugging for printing content to the debugger is:
@@ -114,8 +104,8 @@
                     Correct!
                 </p>
             </section>
-
         </div>
+
         <!-- The section below is displayed when the quiz is finished (or the time runs out) -->
         <section id="finished">
             <!-- Header below will be different if time ran out -->
@@ -130,16 +120,7 @@
             <input type="submit" name="submit" value="Submit" />
         </section>
 
-        <!--
-             High Scores page
-             Display a list of high scores. This is displayed:
-             (a) when a user enters their initials, or
-             (b) when a user clicks the "high scores" text in the header
-
-             The main header is NOT displayed on this page.
-
-             The list of high scores is obtained from local storage, sorted, and added programmatically.
-        -->
+        <!-- List of high scores, option to clear or to start another quiz -->
         <section id="high-scores">
             <h2>High scores</h2>
 
