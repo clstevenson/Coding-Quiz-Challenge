@@ -321,8 +321,14 @@ function getInitials() {
   // turn off the "finished page" and turn on the "high scores" page
   finishedPageEl.style.display = "none";
   highScoresPageEl.style.display = "block";
+
+  // reset timer display
+  timerEl.textContent = "75";
 }
 
 submitEl.addEventListener("click", getInitials);
+initialsEl.addEventListener("keydown", function (evt) {
+  if (evt.key == "Enter") {getInitials();};
+});
 
 clearScoresBtnEl.addEventListener("click", clearScores);
