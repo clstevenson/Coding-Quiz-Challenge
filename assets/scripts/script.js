@@ -125,11 +125,6 @@ function clearScores() {
  * - high scores will be based on avg time per question, or something similar
  * - default to 5 questions (and 75 sec)
  *
- * TODO refactor the code: number the sections instead of the buttons
- * I think some refactoring may be in order...instead of attaching the question
- * numbers to the button elements, attach them to their section great grandparent.
- * (the current sequence is section -> ol -> li -> button)
- *
  * Write a function to obtain the question number from the event (click) target,
  * which is the button.
  *
@@ -139,7 +134,27 @@ function clearScores() {
  * - use the first N questions (five? user choice? See above block)
  *********************/
 
+// retrieve array of sections containing questions
 var questionsPage = document.querySelectorAll(".question");
+
+// function to shuffle array elements
+// taken from SO: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
+function shuffle(array) {
+  let currentIndex = array.length,  randomIndex;
+
+  // While there remain elements to shuffle.
+  while (currentIndex > 0) {
+
+    // Pick a remaining element.
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+  return array;
+}
 
 // Identify the first question since it is special
 var firstQuestionEl = questionsPage[0];
