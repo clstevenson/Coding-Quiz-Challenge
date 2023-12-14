@@ -26,3 +26,5 @@ One can view the high scores at any time by clicking the text in the upper left 
 - larger testbank of questions
 - user selection of the quiz length (number of questions)
 - display of time/dates with the high scores
+- allow user to quit during the quiz
+- if user's score is zero, don't prompt them for initials
