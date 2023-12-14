@@ -2,7 +2,7 @@
 var launchPageEl = document.getElementById("launch-page");
 var highScoresPageEl = document.getElementById("high-scores");
 var finishedPageEl = document.getElementById("finished");
-var questionsContainerEl = document.getElementById("all-questions");
+var questionsPageEl = document.getElementById("all-questions");
 
 ///////////////////////////////////////////////////////////////////////////////
 //                                High Scores                                 //
@@ -112,9 +112,61 @@ function clearScores() {
 //                               Quiz Questions                              //
 ///////////////////////////////////////////////////////////////////////////////
 
-// First retrieve an array of all sections containing questions
-// Only one of these sections will have visible elements at any give time
-// As the user submits answers, we progress through the array
+// define object array with the questions, choices, and correct answer
+// there are four choices for each question
+// boolean array must be scrambled the same way as the choices
+var quizQuestions = [
+  {
+    question: "Commonly used data types do NOT include:",
+    choices: [
+      "strings",
+      "booleans",
+      "alerts",
+      "numbers"
+    ],
+    isCorrect: [false, false, true, false]
+  },
+  {
+    question: "The condition in an if/else statement is enclosed with ________.",
+    choices: [
+      "quotes",
+      "curly brackets",
+      "parenthesis",
+      "square brackets"
+    ],
+    isCorrect: [false, false, true, false]
+  },
+  {
+    question: "Arrays in JavaScript can be used to store ________.",
+    choices: [
+      "numbers and strings",
+      "other arrays",
+      "booleans",
+      "all of the above"
+    ],
+    isCorrect: [false, false, false, true]
+  },
+  {
+    question: "String values must be enclosed within ________ when being assigned to variables.",
+    choices: [
+      "commas",
+      "curly brackets",
+      "quotes",
+      "parenthesis"
+    ],
+    isCorrect: [false, false, true, false]
+  },
+  {
+    question: "A very useful tool used during development and debugging for printing content to the debugger is:",
+    choices: [
+      "JavaScript",
+      "terminal/bash",
+      "for loops",
+      "console.log"
+    ],
+    isCorrect: [false, false, false, true]
+  }
+];
 
 /*********************
  * TODO add routine to scramble the question order
@@ -134,13 +186,11 @@ function clearScores() {
  * - use the first N questions (five? user choice? See above block)
  *********************/
 
-// retrieve array of sections containing questions
-var questionsPage = document.querySelectorAll(".question");
-
 // function to shuffle array elements
 // taken from SO: https://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
 function shuffle(array) {
-  let currentIndex = array.length,  randomIndex;
+  var currentIndex = array.length;
+  var randomIndex;
 
   // While there remain elements to shuffle.
   while (currentIndex > 0) {
@@ -155,29 +205,35 @@ function shuffle(array) {
   }
   return array;
 }
-// convenience function to shuffle array indices
-// (not sure I will use this...depends how I implement the refactor)
-function shuffleIndex(length) {
-  var sequence [];
-  for (var i=0; i<length; i++) {sequence[i] = i;}
-  return shuffle(sequence);
+
+quizQuestions = shuffle(quizQuestions);
+
+// function to display a given quiz question
+function displayQuestion(number) {
+  // input argument must be an integer within the array bounds
+  if (number < 0 || number >= quizQuestions.length || !Number.isInteger(number)) {
+    return
+  }
+
+  // set up the question page with the desired question
+  var questionEl = document.querySelector("#all-questions h2");
+  questionEl.textContent = quizQuestions[number].question;
+
+  var choicesEl = document.querySelectorAll("#all-questions button");
+  for (var i=0; i<4; i++) {
+    choicesEl[i].textContent = quizQuestions[number].choices[i];
+  }
+
+  // need to provide a way for event target to get the quesiton number
+  questionsPageEl.dataset.qnum = number;
+
+  // show the question page (and hide the others)
+  questionsPageEl.style.display = "block";
+  launchPageEl.style.display = "none";
+  highScoresPageEl.style.display = "none";
+  finishedPageEl.style.display = "none";
 }
 
-/*
- * Turns out I cannot shuffle the questionsPage array directly using the shuffle() function
- * I guess nodes are different? Shuffling (or swapping) seems to have no impact on the array order
- * In order to shuffle I will have to refactor, possibly an array of objects where each object
- * has the question, the choices, and the identify of the correct choice.
- */
-
-// Identify the first question since it is special
-var firstQuestionEl = questionsPage[0];
-
-// section element will contain the data attribute identifying its question
-// we will use zero-based indexing of questions
-for (var i = 0; i < questionsPage.length; i++) {
-  questionsPage[i].dataset.qnum = i;
-};
 
 ///////////////////////////////////////////////////////////////////////////////
 //                              Countdown Timer                              //
@@ -214,17 +270,11 @@ function displayFinal() {
   var scoreEl = document.getElementById("final-score");
   scoreEl.textContent = "Your final score is: " + timeLeft;
 
-  // makd sure all questions pages are hidden
-  hideQuestions();
+  // makd sure questions page is hidden
+  questionsPageEl.style.display = "none";
 
   // show the page
   finishedPageEl.style.display = "block";
-}
-
-function hideQuestions() {
-  for (var i = 0; i < questionsPage.length; i++) {
-    questionsPage[i].style.display = "none";
-  }
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -239,9 +289,8 @@ viewHighScoresEl.addEventListener("click", function() {
   // turn off the launch page display, turn on the high scores page
   launchPageEl.style.display = "none";
   highScoresPageEl.style.display = "block";
-  // just in case, turn off all questions pages too
-  hideQuestions();
-  // and the finishing page too, in case it is showing
+  // just in case, turn off other pages in case they are showing
+  questionsPageEl.style.display = "none";
   finishedPageEl.style.display = "none";
 });
 
@@ -251,18 +300,16 @@ btnGoBackEl.addEventListener("click", function() {
   // turn off the high scores page and turn on the launch page
   launchPageEl.style.display = "block";
   highScoresPageEl.style.display = "none";
-  // just in case, turn off the questions pages
-  hideQuestions();
+  // just in case, turn off the questions page
+  questionsPageEl.style.display = "none";
 });
 
 // button to start the quiz
 // contains timer functions
 var btnStartQuizEl = document.getElementById("btn-start");
 btnStartQuizEl.addEventListener("click", function() {
-  // turn off the launch page
-  launchPageEl.style.display = "none";
-  // turn on the section with the first question
-  firstQuestionEl.style.display = "block";
+  // show the first question
+  displayQuestion(1);
   // start the timer
   timeLeft = 75;   // initialize
   timeInterval = setInterval(displayTimeLeft, 1000);
@@ -271,22 +318,27 @@ btnStartQuizEl.addEventListener("click", function() {
 /*
  * This is the event listener that drives the quiz-taking process.
  * Click target is a button. For the correct answer, the button
- * has a data-attribute data-correct equal to the string "true"
- * The (great grandparent) section containing the button has the
- * question number, which is a zero-based index of the questions.
  */
-questionsContainerEl.addEventListener("click", function(evt) {
+questionsPageEl.addEventListener("click", function(evt) {
+  // element to give response to choice
+  var responseEl = document.querySelector("#all-questions p");
+
+  console.log("I am here!")
+
   // retrieve the button that was selected
   var chosenAnswerEl = evt.target;
 
-  // create variables from data stored with clicked item and its section
-  // note the need to convert variable types
-  // remember that question number (qnum) is a zero-based index
-  var qnum = +chosenAnswerEl.closest(".question").dataset.qnum;
-  var isCorrect = (chosenAnswerEl.dataset.correct === "true");
+  // get the associated quiz number
+  var qnum = +chosenAnswerEl.closest("#all-questions").dataset.qnum;
+
+  // which choice did the user make?
+  var userChoice = +chosenAnswerEl.dataset.choice;
+
+  // was it correct?
+  var isCorrect = quizQuestions[qnum].isCorrect[userChoice];
 
   // after the last question we need to do something different
-  var lastQ = questionsPage.length - 1;
+  var lastQ = quizQuestions.length - 1;
 
   // first check if on the last page
   if (qnum == lastQ) {
@@ -298,16 +350,12 @@ questionsContainerEl.addEventListener("click", function(evt) {
     displayFinal();
   } else if (isCorrect) {
     // not on the last page and the answer is correct
-    questionsPage[qnum + 1].children[2].textContent = "Correct!"
-    // turn off current question, move to next question
-    questionsPage[qnum].style.display = "none";
-    questionsPage[qnum + 1].style.display = "block";
+    responseEl.textContent = "Choice was correct!"
+    // display the next question
+    displayQuestion(qnum+1);
   } else {
     // not on the last page and the answer was incorrect
-    questionsPage[qnum + 1].children[2].textContent = "Wrong!"
-    // turn off current question, move to next question
-    questionsPage[qnum].style.display = "none";
-    questionsPage[qnum + 1].style.display = "block";
+    responseEl.textContent = "Choice was wrong."
     // assess penalty
     timeLeft -= 10;
     if (timeLeft < 0) {
@@ -316,6 +364,9 @@ questionsContainerEl.addEventListener("click", function(evt) {
       // stop timer and display "finished" page
       clearInterval(timeInterval);
       displayFinal();
+    } else {
+    // display the next question
+    displayQuestion(qnum+1);
     }
   }
 });

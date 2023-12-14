@@ -22,7 +22,7 @@ One can view the high scores at any time by clicking the text in the upper left 
 
 ## Planned Future Enhancements
 
-- randomize the questions and answers so the quizzes will not be identical
+- randomize the answer choices (as of now only the question order is randomized)
 - larger testbank of questions
 - user selection of the quiz length (number of questions)
 - display of time/dates with the high scores

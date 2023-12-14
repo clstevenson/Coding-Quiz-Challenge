@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Cooding Quiz Challenge</title>
+        <title>Coding Quiz Challenge</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="assets/styles/styles.css" type="text/css" media="screen" />
@@ -31,80 +31,24 @@
             </button>
         </section>
 
-        <!-- div contains all questions and we set the event listener on it -->
-        <div id="all-questions">
-            <section class="question">
-                <h2>
-                    Commonly used data types do NOT include:
-                </h2>
-                <ol>
-                    <li><button>strings</button></li>
-                    <li><button>booleans</button></li>
-                    <li><button data-correct="true">alerts</button></li>
-                    <li><button>numbers</button></li>
-                </ol>
-            </section>
-            <section class="question">
-                <h2>
-                    The condition in an if/else statement is enclosed with ______________.
-                </h2>
-                <ol>
-                    <li><button>quotes</button></li>
-                    <li><button>curly brackets</button></li>
-                    <li><button data-correct="true">parenthesis</button></li>
-                    <li><button>square brackets</button></li>
-                </ol>
+        <!--
+             Section container for the questions in the quiz. Set the event listerner on it.
 
-                <p class="response">
-                    Correct!
-                </p>
-            </section>
-            <section class="question">
-                <h2>
-                    Arrays in JavaScript can be used to store _____________.
-                </h2>
-                <ol>
-                    <li><button>numbers and strings</button></li>
-                    <li><button>other arrays</button></li>
-                    <li><button>booleans</button></li>
-                    <li><button data-correct="true">all of the above</button></li>
-                </ol>
+             The data-attribute on the button will tell us which item the user clicked on (zero-based).
 
-                <p class="response">
-                    Correct!
-                </p>
-            </section>
-            <section class="question">
-                <h2>
-                    String values must be enclosed within ____________ when being assigned to variables.
-                </h2>
-                <ol>
-                    <li><button>commas</button></li>
-                    <li><button>curly brackets</button></li>
-                    <li><button data-correct="true">quotes</button></li>
-                    <li><button>parenthesis</button></li>
-                </ol>
-
-                <p class="response">
-                    Correct!
-                </p>
-            </section>
-            <section class="question">
-                <h2>
-                    A very useful tool used during development and debugging for printing content to the debugger is:
-                </h2>
-                <ol>
-                    <li><button>JavaScript</button></li>
-                    <li><button>terminal/bash</button></li>
-                    <li><button>for loops</button></li>
-                    <li><button data-correct="true">console.log</button></li>
-                </ol>
-
-                <p class="response">
-                    Correct!
-                </p>
-            </section>
-        </div>
+             The data-attribute on the section (which will be changed by the JS script file)
+             tells us which question we are on.
+        -->
+        <section id="all-questions" data-qnum="1">
+            <h2></h2>
+            <ol>
+                <li><button data-choice="0"></button></li>
+                <li><button data-choice="1"></button></li>
+                <li><button data-choice="2"></button></li>
+                <li><button data-choice="3"></button></li>
+            </ol>
+            <p class="response"></p>
+        </section>
 
         <!-- The section below is displayed when the quiz is finished (or the time runs out) -->
         <section id="finished">
