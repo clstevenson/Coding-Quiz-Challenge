@@ -155,6 +155,20 @@ function shuffle(array) {
   }
   return array;
 }
+// convenience function to shuffle array indices
+// (not sure I will use this...depends how I implement the refactor)
+function shuffleIndex(length) {
+  var sequence [];
+  for (var i=0; i<length; i++) {sequence[i] = i;}
+  return shuffle(sequence);
+}
+
+/*
+ * Turns out I cannot shuffle the questionsPage array directly using the shuffle() function
+ * I guess nodes are different? Shuffling (or swapping) seems to have no impact on the array order
+ * In order to shuffle I will have to refactor, possibly an array of objects where each object
+ * has the question, the choices, and the identify of the correct choice.
+ */
 
 // Identify the first question since it is special
 var firstQuestionEl = questionsPage[0];
