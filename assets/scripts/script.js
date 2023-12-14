@@ -116,8 +116,6 @@ function clearScores() {
 // Only one of these sections will have visible elements at any give time
 // As the user submits answers, we progress through the array
 
-var questionsPage = document.querySelectorAll(".question");
-
 /*********************
  * TODO add routine to scramble the question order
  * TODO add routine to scamble the answers within a question
@@ -141,28 +139,15 @@ var questionsPage = document.querySelectorAll(".question");
  * - use the first N questions (five? user choice? See above block)
  *********************/
 
+var questionsPage = document.querySelectorAll(".question");
+
 // Identify the first question since it is special
 var firstQuestionEl = questionsPage[0];
 
-// For each question section, find all the buttons and give them a data-attribute
-// that identifies them as belonging to the same question
-// Let's use zero-based indexing for the question numbers, seems simpler and safer
-
-// For loops to label each button with its question number
-// Maybe there is a better/easier way?
-for (var qnum = 0; qnum < questionsPage.length; qnum++) {
-  // loop thru children elements of current question
-  for (var i = 0; i < questionsPage[qnum].children.length; i++) {
-    var questionEl = questionsPage[qnum].children[i];
-    // if element is OL, then set the data attribute qnum
-    if (questionEl.tagName === "OL") {
-      for (var j = 0; j < questionEl.children.length; j++) {
-        // each li should be the only children of the ol
-        // And each li should only have one child, a button
-        questionEl.children[j].firstChild.dataset.qnum = qnum;
-      };
-    };
-  };
+// section element will contain the data attribute identifying its question
+// we will use zero-based indexing of questions
+for (var i = 0; i < questionsPage.length; i++) {
+  questionsPage[i].dataset.qnum = i;
 };
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -254,15 +239,21 @@ btnStartQuizEl.addEventListener("click", function() {
   timeInterval = setInterval(displayTimeLeft, 1000);
 });
 
-// set event listener for the div containing all the questions
-// when the user clicks on their choice of answer,
-// get the target by event delegation and proceed accordingly
+/*
+ * This is the event listener that drives the quiz-taking process.
+ * Click target is a button. For the correct answer, the button
+ * has a data-attribute data-correct equal to the string "true"
+ * The (great grandparent) section containing the button has the
+ * question number, which is a zero-based index of the questions.
+ */
 questionsContainerEl.addEventListener("click", function(evt) {
   // retrieve the button that was selected
   var chosenAnswerEl = evt.target;
 
-  // create variables from data stored with clicked item
-  var qnum = +chosenAnswerEl.dataset.qnum;
+  // create variables from data stored with clicked item and its section
+  // note the need to convert variable types
+  // remember that question number (qnum) is a zero-based index
+  var qnum = +chosenAnswerEl.closest(".question").dataset.qnum;
   var isCorrect = (chosenAnswerEl.dataset.correct === "true");
 
   // after the last question we need to do something different
